@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>CardioSim 3D — Interactive Heart Anatomy</title>
+  <meta name="description" content="Ultra-realistic interactive 3D human heart educational visualization" />
+  <link rel="stylesheet" href="style.css" />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Outfit:wght@300;400;600;700;800&display=swap" rel="stylesheet">
+  <script type="text/javascript" src="https://static.sketchfab.com/api/sketchfab-viewer-1.12.1.js"></script>
+</head>
+<body>
+
+  <!-- 3D Viewer -->
+  <div id="viewer-container">
+    <iframe src="" id="api-frame" allow="autoplay; fullscreen; xr-spatial-tracking" allowfullscreen mozallowfullscreen="true" webkitallowfullscreen="true"></iframe>
+    <div id="loading-screen">
+      <div class="loader-content">
+        <div class="loader-heart">🫀</div>
+        <h2>Loading 3D Heart Model...</h2>
+        <div class="loader-bar"><div class="loader-fill" id="loaderFill"></div></div>
+        <p id="loaderText">Initializing viewer...</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- Annotation markers overlay -->
+  <div id="markers-overlay"></div>
+
+  <!-- UI Overlay -->
+  <div id="ui-overlay">
+    <header id="topBar">
+      <div class="brand">
+        <span class="brand-icon">🫀</span>
+        <div><h1>CardioSim <span class="accent">3D</span></h1><p class="tagline">Interactive Cardiac Anatomy</p></div>
+      </div>
+      <div class="top-actions">
+        <button id="btnGuidedTour" class="btn-neon"><span class="btn-ico">📖</span> Guided Tour</button>
+        <button id="btnQuizMode" class="btn-neon"><span class="btn-ico">❓</span> Quiz Mode</button>
+      </div>
+    </header>
+
+    <!-- LEFT PANEL -->
+    <aside id="leftPanel" class="glass-panel">
+      <section class="panel-section">
+        <h2>Heart Rate Control</h2>
+        <div class="bpm-display">
+          <span id="bpmNumber" class="bpm-big">72</span>
+          <div class="bpm-meta"><span>BPM</span><span id="bpmLabel" class="bpm-status">Normal<br/>(Sinus Rhythm)</span></div>
+        </div>
+        <input type="range" id="bpmSlider" min="30" max="200" value="72" class="neon-slider" />
+        <div class="slider-labels"><span>30</span><span>200</span></div>
+        <div class="bpm-presets">
+          <button class="preset-btn" data-bpm="60">🧘 Resting</button>
+          <button class="preset-btn active" data-bpm="72">❤️ Normal</button>
+          <button class="preset-btn" data-bpm="150">🏃 Exercise</button>
+        </div>
+      </section>
+
+      <section class="panel-section">
+        <h2>Anatomy Labels</h2>
+        <p class="hint-text">Hover a 3D heart part or anatomy label to highlight it and inspect blood flow details.</p>
+        <div id="structureList" class="structure-list"></div>
+      </section>
+
+      <section class="panel-section">
+        <h2>Disease Simulation</h2>
+        <div class="disease-grid">
+          <button class="disease-btn active" data-disease="healthy">✅ Healthy</button>
+          <button class="disease-btn" data-disease="blocked">🚫 Blocked Artery</button>
+          <button class="disease-btn" data-disease="valve">⚠️ Valve Malfunction</button>
+          <button class="disease-btn" data-disease="arrhythmia">💔 Arrhythmia</button>
+        </div>
+        <div id="diseaseInfo" class="disease-info"></div>
+      </section>
+    </aside>
+
+    <!-- RIGHT PANEL — Info Card -->
+    <aside id="rightPanel" class="glass-panel">
+      <div id="infoCard" class="info-card">
+        <div class="info-placeholder">
+          <div class="info-pulse"></div>
+          <h3>Anatomy Details</h3>
+          <p>Click on any part of the 3D heart or use the numbered markers to view detailed anatomical information.</p>
+        </div>
+      </div>
+      <div class="legend-section">
+        <h3>Legend</h3>
+        <div class="legend-row"><span class="legend-dot red"></span> Oxygenated Blood</div>
+        <div class="legend-row"><span class="legend-dot blue"></span> Deoxygenated Blood</div>
+        <div class="legend-row"><span class="legend-dot cyan"></span> Electrical Impulse</div>
+        <div class="legend-row"><span class="legend-dot yellow"></span> Valve Structures</div>
+      </div>
+    </aside>
+
+    <!-- Guided Tour -->
+    <div id="guidedOverlay" class="guided-overlay hidden">
+      <div class="guided-card glass-panel">
+        <div class="guided-step-indicator">Step <span id="guidedStepNum">1</span> / <span id="guidedStepTotal">8</span></div>
+        <h3 id="guidedTitle"></h3>
+        <p id="guidedText"></p>
+        <div class="guided-nav">
+          <button id="guidedPrev" class="btn-neon">◀ Previous</button>
+          <button id="guidedNext" class="btn-neon">Next ▶</button>
+          <button id="guidedClose" class="btn-ghost">✕ Close</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Quiz -->
+    <div id="quizOverlay" class="quiz-overlay hidden">
+      <div class="quiz-card glass-panel">
+        <h3 id="quizQuestion"></h3>
+        <div id="quizOptions" class="quiz-options"></div>
+        <div id="quizFeedback" class="quiz-feedback hidden"></div>
+        <div class="quiz-nav">
+          <button id="quizNext" class="btn-neon hidden">Next Question ▶</button>
+          <button id="quizClose" class="btn-ghost">✕ Close Quiz</button>
+        </div>
+        <div class="quiz-score">Score: <span id="quizScore">0</span>/<span id="quizTotal">0</span></div>
+      </div>
+    </div>
+  </div>
+
+  <script src="app.js"></script>
+</body>
+</html>
